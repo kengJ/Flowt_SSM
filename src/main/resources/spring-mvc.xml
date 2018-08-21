@@ -8,7 +8,7 @@
                             http://www.springframework.org/schema/context  
                             http://www.springframework.org/schema/context/spring-context-4.0.xsd  
                             http://www.springframework.org/schema/mvc  
-                            http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
+                            http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd">
 
     <!--避免IE执行AJAX时，返回JSON出现下载文件 -->
     <bean id="mappingJacksonHttpMessageConverter"
@@ -44,9 +44,15 @@
 
     <mvc:default-servlet-handler />
 
+	<!-- excel视图解析 -->
+	<bean class="org.springframework.web.servlet.view.BeanNameViewResolver">  
+    	<property name="order" value="0"/> 
+	</bean>
+
     <!-- 定义跳转的文件的前后缀 ，视图模式配置 -->
     <bean
         class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
         <!-- 这里的配置我的理解是自动给后面action的方法return的字符串加上前缀和后缀，变成一个 可用的url地址 -->
         <property name="prefix" value="/WEB-INF/jsp/" />
         <property name="suffix" value=".jsp" />
@@ -62,4 +68,19 @@
         <!-- 内存中的最大值 -->
         <property name="maxInMemorySize" value="40960" />
     </bean>
+    
+    <!--过滤所有请求，处理跨域请求问题-->
+    <!-- <mvc:interceptors >  	  
+    	<mvc:interceptor>  
+        	<mvc:mapping path="/**"/>  
+        	<bean class="com.interceptor.CommonInterceptor"></bean>  
+    	</mvc:interceptor>  
+	</mvc:interceptors > -->
+	<mvc:cors>
+		<mvc:mapping path="/**"
+	        allowed-origins="*"
+	        allowed-methods="POST, GET, OPTIONS, DELETE, PUT"
+	        allowed-headers="Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With"
+	        allow-credentials="true" />
+	</mvc:cors>
 </beans>
